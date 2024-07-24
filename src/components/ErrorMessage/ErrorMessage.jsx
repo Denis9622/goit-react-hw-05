@@ -1,3 +1,3 @@
-export default function ErrorMessage() {
-  return <p>Something went wrong, please reload the page</p>;
+export default function ErrorMessage () {
+    return(<p>Whoops, something went wrong ! Please try reloading this page !</p>)
 }

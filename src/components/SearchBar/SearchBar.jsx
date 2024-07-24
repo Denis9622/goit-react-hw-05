@@ -1,49 +1,42 @@
-import { Field, Form, Formik } from 'formik';
-// import * as Yup from "yup";
-import toast, { Toaster } from 'react-hot-toast';
-import css from './SearchBar.module.css';
+import toast, { Toaster } from "react-hot-toast";
 
-// const validationSchema = Yup.object().shape({
-//     topic: Yup.string()
-//         .min(3, "Minimum 3 letters")
-//         .required("This field is required"),
-// });
+import css from "./SearchBar.module.css";
 
 export default function SearchBar({ onSearch }) {
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    const form = evt.target;
+    const searchMovie = form.elements.searchMovie.value;
+
+    if (searchMovie.trim() === "") {
+      toast("Ooops! You haven't typed anything...", {
+        style: {
+          color: "red",
+        },
+      });
+      return;
+    }
+
+    onSearch(searchMovie);
+    form.reset();
+  };
+
   return (
-    <div className={css.container}>
-      <Formik
-        className={css.formik}
-        initialValues={{ topic: '' }}
-        // validationSchema={validationSchema}
-        onSubmit={(values, actions) => {
-          const trimmedTopic = values.topic.trim();
-          if (trimmedTopic === '') {
-            toast.error('Can not be empty');
-          } else if (trimmedTopic.length < 3) {
-            toast.error('Minimum 3 letters');
-          } else {
-            onSearch(trimmedTopic);
-            actions.resetForm();
-          }
-        }}
-      >
-        {({ errors, touched }) => (
-          <Form className={css.form}>
-            <Field
-              className={css.field}
-              type="text"
-              name="topic"
-              placeholder="Search images and photos"
-            />
-            <button type="submit" className={css.button}>
-              Search
-            </button>
-            {errors.topic && touched.topic ? <div>{errors.topic}</div> : null}
-          </Form>
-        )}
-      </Formik>
-      <Toaster />
-    </div>
+    <header className={css.header}>
+      <form className={css.form} onSubmit={handleSubmit}>
+        <input
+          className={css.input}
+          type="text"
+          name="searchMovie"
+          autoComplete="off"
+          autoFocus
+          placeholder="Type something..."
+        />
+        <button className={css.btn} type="submit">
+          Find!
+        </button>
+        <Toaster />
+      </form>
+    </header>
   );
 }
